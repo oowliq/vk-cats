@@ -9,11 +9,13 @@
                     placeholder="Ссылка на профиль",
                     v-model="searchQuery")
 
-                    input.search__submit(type="submit" value="Найти.." :disabled="!isValid")
+                    input.search__submit(type="submit"
+                    :value="fetching ? 'Поиск...' :'Найти...' " :disabled="!isValid || fetching" @click.prevent="search")
 </template>
 
 <script>
 import { TweenMax, Power2 } from 'gsap/TweenMax';
+import { mapState, mapActions } from 'vuex';
 
 export default {
     name: 'start',
@@ -24,9 +26,28 @@ export default {
     },
 
     computed: {
+        ...mapState('results', ['fetching']),
         isValid() {
             const URL_REGEXP = new RegExp(/https?:\/\/(www\.)?vk\.com/i);
             return URL_REGEXP.test(this.searchQuery);
+        },
+    },
+
+    methods: {
+        ...mapActions({
+            getUserInfo: 'results/GET_USER_INFO',
+            getUserStats: 'results/GET_USER_STATS',
+        }),
+
+        search() {
+            if (!this.isValid) return;
+            const profileLink = this.searchQuery;
+            const slashIndex = this.searchQuery.lastIndexOf('/') + 1;
+            const profileName = this.searchQuery.slice(slashIndex, profileLink.length);
+
+            this.getUserInfo({ profileName }).then(() => {
+                this.getUserStats({ profileLink }).then(() => {});
+            });
         },
     },
 
@@ -100,6 +121,7 @@ export default {
         background-color: $white;
         margin-right: 20px;
         padding: 1em 2em;
+        width: 30vw;
         border-radius: 4px;
         text-align: center;
         &:focus {

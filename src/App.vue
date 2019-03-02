@@ -12,7 +12,7 @@
             | В живых осталось
             span.cats-counter__alive-cats__count  {{ aliveCats }}
             |  котиков
-        p.cats-counter__dead-cats(v-else) Ты убил всех котиков
+        p.cats-counter__dead-cats(v-else) Ты убил всех котиков 😫
 
     ul.cats
         li.cats__cat(@click.self="destroyCat(index)",
@@ -93,7 +93,7 @@ export default {
     mounted() {
         this.addCats();
         this.catsCounterAnimation();
-
+        this.$store.dispatch('results/GET_USER_STATS', { profileLink: 'http://vk.com/xcycles' });
         window.addEventListener('keyup', (event) => {
             if (event.keyCode === 70) {
                 if (!this.aliveCats) this.addCats();
