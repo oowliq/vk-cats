@@ -1,5 +1,18 @@
+@import url('https://fonts.googleapis.com/css?family=Pacifico');
+@import url('https://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&subset=cyrillic,cyrillic-ext,latin-ext');
+
 *,
 ::after,
 ::before {
     box-sizing: border-box;
+}
+
+body {
+    font-family: 'Open Sans';
+}
+
+.clean-input {
+    border: none;
+    outline: none;
+    background: none;
 }
