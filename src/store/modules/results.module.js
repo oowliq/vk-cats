@@ -2,16 +2,9 @@ import http from '@/helpers/http';
 
 export default {
     state: {
+        fetchedUser: false,
         fetching: false,
-
-        userInfo: {
-            id: 'Неизвестно',
-            firstName: 'Неизвестно',
-            lastName: 'Неизвестно',
-            isClosed: false,
-            canAccessClosed: false,
-            avatar: 'https://openclipart.org/image/2400px/svg_to_png/177394/1366695174.png',
-        },
+        userInfo: {},
         userAnalysis: [],
     },
     mutations: {
@@ -25,13 +18,16 @@ export default {
         },
 
         CHANGE_USER_STATS(state, userStats) {
-            const userAnalysis = {};
+            const userAnalysis = [];
 
             // eslint-disable-next-line no-restricted-syntax
             for (const stat of userStats) {
                 const splitted = stat.split('|');
                 // eslint-disable-next-line prefer-destructuring
-                userAnalysis[splitted[0]] = parseFloat(splitted[1], 10);
+                userAnalysis.push({
+                    name: splitted[0],
+                    y: parseFloat(splitted[1], 10),
+                });
             }
 
             state.userAnalysis = userAnalysis;
@@ -39,6 +35,7 @@ export default {
 
         FETCHING(state, payload) {
             state.fetching = payload;
+            if (payload) state.fetchedUser = true;
         },
     },
     actions: {
@@ -82,5 +79,9 @@ export default {
             });
         },
     },
-    getters: {},
+    getters: {
+        fetchedUser(state) {
+            return state.fetchedUser;
+        },
+    },
 };

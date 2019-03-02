@@ -10,6 +10,8 @@
   "dependencies": {
     "axios": "^0.18.0",
     "gsap": "^2.1.1",
+    "highcharts": "^7.0.3",
+    "highcharts-vue": "^1.2.0",
     "normalize.css": "^8.0.1",
     "register-service-worker": "^1.5.2",
     "v-hotkey": "^0.3.0",

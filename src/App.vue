@@ -20,7 +20,9 @@
         :key="index",
         :class="{dead: !cat.alive}"
         :ref="`cat-${index}`")
-    router-view#view
+
+    slide-y-up-transition(mode="out-in")
+        router-view#view
 </template>
 
 <script>

@@ -7,21 +7,34 @@
                 .search(ref="search")
                     input.search__field(type="text",
                     placeholder="Ссылка на профиль",
-                    v-model="searchQuery")
+                    v-model="searchQuery"
+                    @keyup.enter="search")
 
                     input.search__submit(type="submit"
-                    :value="fetching ? 'Поиск...' :'Найти...' " :disabled="!isValid || fetching" @click.prevent="search")
+                    :value="fetching ? 'Поиск...' :'Найти...' "
+                    :disabled="!isValid || fetching"
+                    @click.prevent="search")
+
+            slide-y-up-transition(v-if="serverError")
+                p.server-error Профиль пользователя скрыт
 </template>
 
 <script>
 import { TweenMax, Power2 } from 'gsap/TweenMax';
 import { mapState, mapActions } from 'vuex';
+import { SlideYUpTransition } from 'vue2-transitions';
 
 export default {
     name: 'start',
+
+    components: {
+        SlideYUpTransition,
+    },
+
     data() {
         return {
             searchQuery: '',
+            serverError: '',
         };
     },
 
@@ -44,9 +57,16 @@ export default {
             const profileLink = this.searchQuery;
             const slashIndex = this.searchQuery.lastIndexOf('/') + 1;
             const profileName = this.searchQuery.slice(slashIndex, profileLink.length);
+            this.serverError = false;
 
-            this.getUserInfo({ profileName }).then(() => {
-                this.getUserStats({ profileLink }).then(() => {});
+            this.getUserInfo({ profileName }).then(({ data }) => {
+                if (!data[0].is_closed) {
+                    this.getUserStats({ profileLink }).then(() => {
+                        this.$router.push({ name: 'results' });
+                    });
+                } else {
+                    this.serverError = true;
+                }
             });
         },
     },
@@ -157,5 +177,17 @@ export default {
     &_wrapper {
         margin-top: 100px;
     }
+}
+
+.server-error {
+    position: absolute;
+    z-index: 1;
+    color: $warning;
+    font-weight: 300;
+    letter-spacing: 1px;
+    background-color: rgba(#fff, 0.2);
+    border-radius: 20em;
+    padding: 1em 2em;
+    bottom: -90px;
 }
 </style>
