@@ -4,6 +4,7 @@ import router from './router';
 import store from './store';
 import './registerServiceWorker';
 import 'normalize.css';
+import './helpers/animations';
 
 Vue.config.productionTip = false;
 
