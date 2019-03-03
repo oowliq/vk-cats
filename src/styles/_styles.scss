@@ -7,9 +7,16 @@
     box-sizing: border-box;
 }
 
+html {
+    height: 100%;
+}
+
 body {
     font-family: 'Open Sans';
     background: $accent;
+    position: relative;
+
+    min-height: 100%;
 }
 
 .clean-input {

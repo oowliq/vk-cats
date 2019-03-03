@@ -6,7 +6,7 @@ export default {
     mutations: {
         ADD_CATS(state) {
             state.cats = [];
-            for (let i = 0; i < 10; i++) {
+            for (let i = 0; i < 10; i += 1) {
                 state.cats.push({ alive: true });
             }
         },
@@ -23,7 +23,7 @@ export default {
 
             // eslint-disable-next-line no-restricted-syntax
             for (const cat of state.cats) {
-                if (cat.alive) aliveCats++;
+                if (cat.alive) aliveCats += 1;
             }
 
             return aliveCats;

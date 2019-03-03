@@ -98,11 +98,10 @@ export default {
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    margin-top: 90px;
-    margin-bottom: 40px;
 }
 
 .results-card {
+    margin-top: 100px;
     position: relative;
     background-color: #edeef0;
     box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.041), 0px 0px 20px 0px rgba(0, 0, 0, 0.05);
@@ -143,6 +142,7 @@ export default {
     text-decoration: none;
     padding: 1em 3em;
     margin-top: 20px;
+    margin-bottom: 40px;
     transition: all 0.2s ease-in-out;
     &:hover {
         background-color: rgba(#fff, 0.3);

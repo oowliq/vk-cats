@@ -135,7 +135,7 @@ export default {
 }
 
 .cats-counter {
-    z-index: 2;
+    z-index: 1;
     position: fixed;
     left: 40px;
     top: 20px;
@@ -156,7 +156,7 @@ export default {
 }
 
 .cats {
-    position: fixed;
+    position: absolute;
     top: 0;
     left: 0;
     right: 0;

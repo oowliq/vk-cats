@@ -119,6 +119,7 @@ export default {
             font-weight: 300;
             letter-spacing: 1px;
             text-align: left;
+            transition: all 0.2s ease-in-out;
         }
     }
     &__submit {

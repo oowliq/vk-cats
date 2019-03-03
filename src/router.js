@@ -1,6 +1,5 @@
 import Vue from 'vue';
 import Router from 'vue-router';
-import store from './store/index';
 
 import Start from '@/views/Start.vue';
 import Results from '@/views/Results.vue';
