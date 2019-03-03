@@ -19,6 +19,7 @@ export default {
                     plotBorderWidth: null,
                     plotShadow: false,
                     type: 'pie',
+                    allowPointSelect: true,
                 },
 
                 credits: {
@@ -64,7 +65,6 @@ export default {
     mounted() {
         this.charts.series[0].data = this.userAnalysis;
     },
-
     watch: {
         userAnalysis() {
             this.charts.series[0].data = this.userAnalysis;

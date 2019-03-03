@@ -92,14 +92,23 @@ export default {
     align-items: center;
     position: relative;
     margin-top: 100px;
+    @media (max-width: 660px) {
+        flex-direction: column;
+        justify-content: space-between;
+        height: 140px;
+    }
     &__field {
         @extend .clean-input;
         background-color: $white;
         margin-right: 20px;
         padding: 1em 2em;
-        width: 30vw;
+        width: 400px;
         border-radius: 4px;
         text-align: center;
+        transition: all 0.2s ease-in-out;
+        @media (max-width: 660px) {
+            width: 300px;
+        }
         &:focus {
             &::placeholder {
                 color: transparent;

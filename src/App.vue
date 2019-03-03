@@ -156,17 +156,15 @@ export default {
 }
 
 .cats {
-    background: $accent;
-    width: 100%;
-    height: 100vh;
-    position: absolute;
+    position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
-    height: 100%;
+    right: 0;
+    bottom: 0;
     overflow: hidden;
     margin: 0;
     padding: 0;
+
     &::after {
         content: '';
         position: absolute;
@@ -189,7 +187,7 @@ export default {
         background-size: cover;
         animation: animate 25s linear infinite;
         bottom: -150px;
-        z-index: 2;
+        z-index: 999;
 
         &:hover {
             cursor: pointer;
@@ -285,7 +283,6 @@ export default {
 
 #view {
     width: 100%;
-    height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;

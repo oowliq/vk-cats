@@ -6,7 +6,7 @@
             search(@search="search" :fetching="fetching")
 
             slide-y-up-transition(v-if="serverError")
-                p.server-error Ошибка обработки данных
+                p.server-error {{ serverError }}
 </template>
 
 <script>
@@ -36,6 +36,52 @@ export default {
     },
 
     methods: {
+        startAnimation() {
+            const { heroWrapper } = this.$refs;
+            TweenMax.fromTo(
+                heroWrapper,
+                1,
+                {
+                    css: {
+                        top: '-200px',
+                        opacity: 0,
+                    },
+                    ease: Power2.easeInOut,
+                },
+                {
+                    css: {
+                        top: '0',
+                        opacity: 1,
+                    },
+                    ease: Power2.easeInOut,
+                },
+            ).delay(1);
+        },
+
+        endAnimation(callback) {
+            const { heroWrapper } = this.$refs;
+            TweenMax.fromTo(
+                heroWrapper,
+                1,
+
+                {
+                    css: {
+                        top: '0',
+                        opacity: 1,
+                    },
+                    ease: Power2.easeInOut,
+                },
+                {
+                    css: {
+                        top: '200px',
+                        opacity: 0,
+                    },
+                    ease: Power2.easeInOut,
+                    onComplete: callback,
+                },
+            );
+        },
+
         ...mapActions({
             getUserInfo: 'results/GET_USER_INFO',
             getUserStats: 'results/GET_USER_STATS',
@@ -47,45 +93,39 @@ export default {
             this.getUserInfo({ profileName })
                 .then(({ data }) => {
                     if (!data[0].is_closed) {
-                        this.getUserStats({ profileLink }).then(() => {
-                            this.$router.push({ name: 'results', params: { id: profileName } });
-                        });
+                        this.getUserStats({ profileLink })
+                            .then(() => {
+                                this.endAnimation(() => {
+                                    this.$router.push({
+                                        name: 'results',
+                                        params: { id: profileName },
+                                    });
+                                });
+                            })
+                            .catch(() => {
+                                this.serverError = 'Ошибка обработки данных';
+                            });
                     } else {
-                        this.serverError = true;
+                        this.serverError = `Страница пользователя ${profileName} закрыта. Увы..`;
                     }
                 })
                 .catch(() => {
-                    this.serverError = true;
+                    this.serverError = 'Ошибка обработки данных';
                 });
         },
     },
 
     mounted() {
-        const { heroWrapper } = this.$refs;
-
-        TweenMax.fromTo(
-            heroWrapper,
-            1,
-            {
-                css: {
-                    top: '-200px',
-                    opacity: 0,
-                },
-                ease: Power2.easeInOut,
-            },
-            {
-                css: {
-                    top: '0',
-                    opacity: 1,
-                },
-                ease: Power2.easeInOut,
-            },
-        ).delay(1);
+        this.startAnimation();
     },
 };
 </script>
 
 <style lang="scss" scoped>
+.start {
+    height: 100vh;
+}
+
 .hero-wrapper {
     position: relative;
     display: flex;
@@ -98,7 +138,7 @@ export default {
     text-decoration: none;
     color: #fff;
     &__source {
-        font-size: 8vw;
+        font-size: 5em;
         font-family: 'Pacifico';
     }
 }

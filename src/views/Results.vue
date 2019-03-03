@@ -1,30 +1,30 @@
 <template lang="pug">
-    .results
+    .results(ref="results")
         slide-y-up-transition(mode="out-in" v-if="!fetching")
             .results-card
                 .results-card__header
-                    .user-avatar
-                        img(:src="userInfo.avatar").user-avatar__source
-                    .user-data
-                        span.user-data__user-id {{ userInfo.id }}
-                        span.user-data__user-name {{ userInfo.firstName }}  {{ userInfo.lastName }}
+                    user(:user="userInfo")
                 .results-card__body
                     charts
-        router-link.go-back(:to={name: 'start'} v-if="!fetching") На главную
+        router-link.go-back(:to={name: 'start'} v-if="!fetching" ref="goBack") На главную
 
 </template>
 
 <script>
-import { mapState, mapGetters, mapActions } from 'vuex';
+import { mapGetters, mapActions } from 'vuex';
 import { SlideYUpTransition } from 'vue2-transitions';
 
+import User from '@/components/User.vue';
 import Charts from '@/components/Charts.vue';
+import { TweenMax, Power2 } from 'gsap/TweenMax';
 
 export default {
     name: 'results',
-    components: { Charts, SlideYUpTransition },
+    components: { Charts, User, SlideYUpTransition },
+
     data() {
         return {
+            d: false,
             fetching: true,
         };
     },
@@ -40,14 +40,40 @@ export default {
             getUserInfo: 'results/GET_USER_INFO',
             getUserStats: 'results/GET_USER_STATS',
         }),
+
+        endAnimation(callback) {
+            const { results } = this.$refs;
+
+            TweenMax.fromTo(
+                results,
+                1,
+
+                {
+                    css: {
+                        top: '0',
+                        opacity: 1,
+                    },
+                    ease: Power2.easeInOut,
+                },
+                {
+                    css: {
+                        top: '-800px',
+                        opacity: 0,
+                    },
+                    ease: Power2.easeInOut,
+                    onComplete: callback,
+                },
+            );
+        },
     },
 
     mounted() {
+        this.d = true;
         if (!this.results) {
             const profileName = this.$route.params.id;
             const profileLink = `https://vk.com/${profileName}`;
             this.getUserInfo({ profileName })
-                .then(({ data }) => {
+                .then(() => {
                     this.getUserStats({ profileLink }).then(() => {
                         this.fetching = false;
                     });
@@ -56,6 +82,12 @@ export default {
                     this.$router.push({ name: 'start' });
                 });
         }
+    },
+
+    beforeRouteLeave(to, from, next) {
+        this.endAnimation(() => {
+            next();
+        });
     },
 };
 </script>
@@ -66,16 +98,27 @@ export default {
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    margin-top: 90px;
+    margin-bottom: 40px;
 }
 
 .results-card {
+    position: relative;
     background-color: #edeef0;
     box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.041), 0px 0px 20px 0px rgba(0, 0, 0, 0.05);
     border-radius: 4px;
-    width: 60vw;
+    width: 800px;
     padding: 2em;
     display: flex;
     flex-direction: column;
+
+    @media (max-width: 900px) {
+        width: 600px;
+    }
+
+    @media (max-width: 670px) {
+        width: 400px;
+    }
 
     &__header {
         display: flex;
@@ -85,39 +128,6 @@ export default {
 
     &__body {
         margin-top: 40px;
-    }
-}
-
-.user-avatar {
-    border-radius: 20em;
-    overflow: hidden;
-    width: 100px;
-    height: 100px;
-
-    &__source {
-        width: 100px;
-        border-radius: 20em;
-    }
-}
-
-.user-data {
-    display: flex;
-    flex-direction: column;
-    margin-left: 20px;
-    &__user-name {
-        font-size: 25px;
-        font-weight: 300;
-        letter-spacing: 1px;
-    }
-    &__user-id {
-        font-weight: 600;
-        color: $accent;
-        margin-bottom: 10px;
-        letter-spacing: 2px;
-        font-size: 14px;
-        &::before {
-            content: 'ID: ';
-        }
     }
 }
 
@@ -131,7 +141,7 @@ export default {
     background-color: rgba(#fff, 0.2);
     border-radius: 20em;
     text-decoration: none;
-    padding: 1em 2em;
+    padding: 1em 3em;
     margin-top: 20px;
     transition: all 0.2s ease-in-out;
     &:hover {
