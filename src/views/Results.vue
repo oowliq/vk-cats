@@ -1,77 +1,61 @@
 <template lang="pug">
     .results
-        .results-card
-            .results-card__header
-                .user-avatar
-                    img(:src="userInfo.avatar").user-avatar__source
-                .user-data
-                    span.user-data__user-id {{ userInfo.id }}
-                    span.user-data__user-name {{ userInfo.firstName }}  {{ userInfo.lastName }}
-            .results-card__body
-                highcharts(:options="charts" v-if="this.userAnalysis")
-        router-link.go-back(:to={name: 'start'}) Закончить шпионаж
+        slide-y-up-transition(mode="out-in" v-if="!fetching")
+            .results-card
+                .results-card__header
+                    .user-avatar
+                        img(:src="userInfo.avatar").user-avatar__source
+                    .user-data
+                        span.user-data__user-id {{ userInfo.id }}
+                        span.user-data__user-name {{ userInfo.firstName }}  {{ userInfo.lastName }}
+                .results-card__body
+                    charts
+        router-link.go-back(:to={name: 'start'} v-if="!fetching") На главную
 
 </template>
 
 <script>
-import { mapState } from 'vuex';
+import { mapState, mapGetters, mapActions } from 'vuex';
+import { SlideYUpTransition } from 'vue2-transitions';
+
+import Charts from '@/components/Charts.vue';
 
 export default {
     name: 'results',
-
-    mounted() {
-        this.charts.series[0].data = this.userAnalysis;
-    },
-
+    components: { Charts, SlideYUpTransition },
     data() {
         return {
-            charts: {
-                chart: {
-                    backgroundColor: 'rgba(255, 255, 255, 0.0)',
-                    plotBackgroundColor: null,
-                    plotBorderWidth: null,
-                    plotShadow: false,
-                    type: 'pie',
-                },
-
-                credits: {
-                    enabled: false,
-                },
-
-                title: {
-                    text: '',
-                },
-                tooltip: {
-                    pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>',
-                },
-
-                plotOptions: {
-                    pie: {
-                        allowPointSelect: true,
-                        cursor: 'pointer',
-                        dataLabels: {
-                            enabled: true,
-                            format: '<b>{point.name}</b>: {point.percentage:.1f} %',
-                            style: {
-                                textOutline: false,
-                            },
-                        },
-                    },
-                },
-
-                series: [
-                    {
-                        name: 'Интересы',
-                        colorByPoint: true,
-                        data: [],
-                    },
-                ],
-            },
+            fetching: true,
         };
     },
 
     computed: {
-        ...mapState('results', ['userInfo', 'userAnalysis']),
+        ...mapGetters({
+            userInfo: 'results/userInfo',
+        }),
+    },
+
+    methods: {
+        ...mapActions({
+            getUserInfo: 'results/GET_USER_INFO',
+            getUserStats: 'results/GET_USER_STATS',
+        }),
+    },
+
+    mounted() {
+        if (!this.results) {
+            const profileName = this.$route.params.id;
+            const profileLink = `https://vk.com/${profileName}`;
+            this.getUserInfo({ profileName })
+                .then(({ data }) => {
+                    this.getUserStats({ profileLink }).then(() => {
+                        this.fetching = false;
+                    });
+                })
+                .catch(() => {
+                    this.$router.push({ name: 'start' });
+                });
+        }
     },
 };
 </script>
@@ -83,6 +67,7 @@ export default {
     align-items: center;
     flex-direction: column;
 }
+
 .results-card {
     background-color: #edeef0;
     box-shadow: 0px 0px 20px 0px rgba(0, 0, 0, 0.041), 0px 0px 20px 0px rgba(0, 0, 0, 0.05);
@@ -107,9 +92,10 @@ export default {
     border-radius: 20em;
     overflow: hidden;
     width: 100px;
+    height: 100px;
 
     &__source {
-        height: 100px;
+        width: 100px;
         border-radius: 20em;
     }
 }

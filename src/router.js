@@ -27,7 +27,7 @@ const router = new Router({
 
         {
             name: 'results',
-            path: '/results',
+            path: '/results/:id',
             component: Results,
             meta: {
                 title: 'Результаты',
@@ -39,9 +39,9 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
     document.title = to.meta.title;
 
-    if (to.matched.some(record => record.name === 'results')) {
-        if (!store.getters['results/fetchedUser']) return next({ name: 'start' });
-    }
+    // if (to.matched.some(record => record.name === 'results')) {
+    //     if (!store.getters['results/fetchedUser']) return next({ name: 'start' });
+    // }
 
     return next();
 });

@@ -9,12 +9,14 @@ export default {
     },
     mutations: {
         CHANGE_USER_INFO(state, userInfo) {
-            state.userInfo.id = userInfo.id;
-            state.userInfo.firstName = userInfo.first_name;
-            state.userInfo.lastName = userInfo.last_name;
-            state.userInfo.isClosed = userInfo.is_closed;
-            state.userInfo.canAccessClosed = userInfo.can_access_closed;
-            state.userInfo.avatar = userInfo.photo_200_orig;
+            const newInfo = {};
+            newInfo.id = userInfo.id;
+            newInfo.firstName = userInfo.first_name;
+            newInfo.lastName = userInfo.last_name;
+            newInfo.isClosed = userInfo.is_closed;
+            newInfo.canAccessClosed = userInfo.can_access_closed;
+            newInfo.avatar = userInfo.photo_200_orig;
+            state.userInfo = newInfo;
         },
 
         CHANGE_USER_STATS(state, userStats) {
@@ -82,6 +84,14 @@ export default {
     getters: {
         fetchedUser(state) {
             return state.fetchedUser;
+        },
+
+        userAnalysis(state) {
+            return state.userAnalysis;
+        },
+
+        userInfo(state) {
+            return state.userInfo;
         },
     },
 };

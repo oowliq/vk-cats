@@ -9,10 +9,10 @@
 
     .cats-counter(ref="catsCounter")
         p.cats-counter__alive-cats(v-if="aliveCats")
-            | В живых осталось
-            span.cats-counter__alive-cats__count  {{ aliveCats }}
+            | Лопнуто
+            span.cats-counter__alive-cats__count  {{ getBurstCats }}
             |  котиков
-        p.cats-counter__dead-cats(v-else) Ты убил всех котиков 😫
+        p.cats-counter__dead-cats(v-else) Ты лопнул всех котиков 😫
 
     ul.cats
         li.cats__cat(@click.self="destroyCat(index)",
@@ -40,6 +40,9 @@ export default {
         ...mapGetters({
             aliveCats: 'cats/aliveCats',
         }),
+        getBurstCats() {
+            return 10 - this.aliveCats;
+        },
     },
 
     methods: {
@@ -50,16 +53,19 @@ export default {
 
         destroyCatAnimation(cat) {
             const ref = this.$refs[`cat-${cat}`];
+
             TweenMax.to(ref, 1, {
                 onComplete: () => {
                     this.killCat({ cat });
                     TweenMax.set(ref, { clearProps: 'all' });
                 },
+
                 css: {
                     width: 0,
                     height: 0,
                     backgroundColor: '#f7b731',
                 },
+
                 ease: Power2.easeInOut,
             });
         },
@@ -95,7 +101,7 @@ export default {
     mounted() {
         this.addCats();
         this.catsCounterAnimation();
-        this.$store.dispatch('results/GET_USER_STATS', { profileLink: 'http://vk.com/xcycles' });
+
         window.addEventListener('keyup', (event) => {
             if (event.keyCode === 70) {
                 if (!this.aliveCats) this.addCats();
