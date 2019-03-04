@@ -25,11 +25,11 @@ const router = new Router({
         },
 
         {
-            name: 'results',
-            path: '/results/:id',
+            name: 'user',
+            path: '/user/:id',
             component: Results,
             meta: {
-                title: 'Результаты',
+                title: 'Результат',
             },
         },
     ],
