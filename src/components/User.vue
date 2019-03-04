@@ -75,21 +75,20 @@ export default {
         position: absolute;
         right: 0;
         top: 80px;
-        color: $warning;
-        font-weight: 300;
+        color: $error;
         font-size: 12px;
         letter-spacing: 1px;
-        background-color: rgba(#000, 0.05);
+        background-color: rgba($accent, 0.1);
         border-radius: 20em;
         text-decoration: none;
         padding: 1em 2em;
         margin-top: 20px;
         transition: all 0.2s ease-in-out;
         &:hover {
-            background-color: rgba(#000, 0.08);
+            background-color: rgba($accent, 0.08);
         }
         &:active {
-            background-color: rgba(#000, 0.02);
+            background-color: rgba($accent, 0.02);
         }
     }
 }
