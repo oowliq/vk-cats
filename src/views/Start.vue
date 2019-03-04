@@ -97,7 +97,7 @@ export default {
                             .then(() => {
                                 this.endAnimation(() => {
                                     this.$router.push({
-                                        name: 'results',
+                                        name: 'user',
                                         params: { id: profileName },
                                     });
                                 });
