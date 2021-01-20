@@ -9,7 +9,7 @@
     },
     "dependencies": {
         "axios": "^0.18.0",
-        "gsap": "^2.1.1",
+        "gsap": "^3.6.0",
         "highcharts-vue": "^1.2.0",
         "normalize.css": "^8.0.1",
         "register-service-worker": "^1.5.2",
